@@ -1,0 +1,104 @@
+@import "tailwindcss";
+
+@theme {
+  --color-verde-950: #0f1f19;
+  --color-verde-900: #16302a;
+  --color-verde-800: #1f4438;
+  --color-verde-700: #2b5a48;
+  --color-verde-600: #3a725d;
+  --color-beige-50: #fffcf6;
+  --color-beige-100: #f8f2e6;
+  --color-beige-200: #efe4d0;
+  --color-beige-300: #e2cfa8;
+  --color-madera-500: #a9764f;
+  --color-madera-600: #8b5e3c;
+  --color-madera-700: #6e4a2f;
+  --color-oro-400: #d4af6a;
+
+  --font-display: "Fraunces", ui-serif, Georgia, serif;
+  --font-body: "Manrope", ui-sans-serif, system-ui, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--color-beige-50);
+  color: var(--color-verde-950);
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+.scrollbar-none {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+/* Placeholder de imagen — reemplazar por foto real */
+.ph-image {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: linear-gradient(135deg, var(--color-verde-800) 0%, var(--color-verde-700) 45%, var(--color-madera-600) 100%);
+}
+.ph-image::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle at 20% 20%, rgba(255,255,255,0.08) 0, transparent 40%),
+    radial-gradient(circle at 80% 70%, rgba(255,255,255,0.06) 0, transparent 45%);
+}
+.ph-image .ph-label {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  color: var(--color-beige-100);
+}
+
+.wood-divider {
+  height: 6px;
+  background: repeating-linear-gradient(90deg, var(--color-madera-600) 0 24px, var(--color-madera-700) 24px 26px);
+}
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.9rem 1.75rem;
+  border-radius: 999px;
+  background: var(--color-oro-400);
+  color: var(--color-verde-950);
+  font-weight: 700;
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+.btn-primary:hover {
+  background: #e2c489;
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.9rem 1.75rem;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.4);
+  color: white;
+  font-weight: 600;
+  backdrop-filter: blur(4px);
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+.btn-secondary:hover {
+  background: rgba(255,255,255,0.2);
+  transform: translateY(-1px);
+}

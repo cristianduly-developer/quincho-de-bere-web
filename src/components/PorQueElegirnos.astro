@@ -1,0 +1,24 @@
+---
+import { INCLUYE, NEGOCIO } from '../data/negocio';
+---
+<section id="por-que-elegirnos" class="max-w-6xl mx-auto px-6 py-20 md:py-28 scroll-mt-16">
+  <div class="text-center max-w-2xl mx-auto mb-14">
+    <p class="text-xs uppercase tracking-[0.2em] text-madera-600 font-semibold mb-3">¿Por qué elegirnos?</p>
+    <h2 class="font-display text-3xl md:text-4xl font-semibold text-verde-950">
+      Todo lo que necesitás, en un mismo lugar
+    </h2>
+    <p class="mt-4 text-verde-900/70">
+      Capacidad para hasta {NEGOCIO.capacidad} personas, en {NEGOCIO.direccion}.
+    </p>
+  </div>
+
+  <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+    {INCLUYE.map((item) => (
+      <div class="bg-white rounded-2xl border border-verde-800/8 p-5 hover:shadow-lg hover:-translate-y-0.5 transition-all">
+        <div class="text-3xl mb-3">{item.icon}</div>
+        <h3 class="font-display font-semibold text-verde-950 text-sm md:text-base leading-snug">{item.titulo}</h3>
+        <p class="text-xs md:text-sm text-verde-900/60 mt-1">{item.desc}</p>
+      </div>
+    ))}
+  </div>
+</section>

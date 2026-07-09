@@ -1,0 +1,62 @@
+---
+import { NEGOCIO, TURNOS, waLink } from '../data/negocio';
+
+const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent(NEGOCIO.direccion)}&output=embed`;
+---
+<section id="ubicacion" class="max-w-6xl mx-auto px-6 py-20 md:py-28 scroll-mt-16">
+  <div class="text-center max-w-2xl mx-auto mb-12">
+    <p class="text-xs uppercase tracking-[0.2em] text-madera-600 font-semibold mb-3">Ubicación</p>
+    <h2 class="font-display text-3xl md:text-4xl font-semibold text-verde-950">Cómo llegar</h2>
+  </div>
+
+  <div class="grid md:grid-cols-2 gap-8 items-stretch">
+    <div class="rounded-3xl overflow-hidden border border-verde-800/10 h-80 md:h-full min-h-80">
+      <iframe
+        src={mapSrc}
+        class="w-full h-full"
+        style="border:0"
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"
+        title="Ubicación de El Quincho de Bere"
+      ></iframe>
+    </div>
+
+    <div class="bg-verde-900 text-beige-50 rounded-3xl p-8 flex flex-col justify-center">
+      <div class="mb-6">
+        <p class="text-xs uppercase tracking-widest text-oro-400 font-semibold mb-1">Dirección</p>
+        <p class="text-lg font-display">{NEGOCIO.direccion}</p>
+      </div>
+      <div class="mb-6">
+        <p class="text-xs uppercase tracking-widest text-oro-400 font-semibold mb-2">Turnos</p>
+        <ul class="space-y-1.5 text-sm text-beige-100/85">
+          {TURNOS.map((t) => (
+            <li class="flex justify-between border-b border-beige-50/10 pb-1.5">
+              <span>{t.nombre}</span>
+              <span class="text-beige-100/60">{t.horario}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+      <a href={waLink('Hola! Quiero consultar disponibilidad en El Quincho de Bere.')} target="_blank" rel="noopener noreferrer" class="btn-primary self-start">
+        Consultar por WhatsApp
+      </a>
+      <div class="mt-6 pt-6 border-t border-beige-50/10">
+        <p class="text-xs uppercase tracking-widest text-oro-400 font-semibold mb-3">Seguinos en redes</p>
+        <div class="flex gap-3 flex-wrap">
+          <a href={NEGOCIO.facebook} target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 text-sm bg-beige-50/10 hover:bg-beige-50/20 transition-colors px-4 py-2 rounded-full">
+            <svg viewBox="0 0 24 24" class="w-4 h-4 fill-current"><path d="M22 12.07C22 6.51 17.52 2 12 2S2 6.51 2 12.07c0 5.02 3.66 9.18 8.44 9.93v-7.03H7.9v-2.9h2.54V9.85c0-2.51 1.49-3.9 3.77-3.9 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56v1.87h2.78l-.45 2.9h-2.33V22c4.78-.75 8.44-4.91 8.44-9.93z"/></svg>
+            Facebook
+          </a>
+          <a href={NEGOCIO.instagram} target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 text-sm bg-beige-50/10 hover:bg-beige-50/20 transition-colors px-4 py-2 rounded-full">
+            <svg viewBox="0 0 24 24" class="w-4 h-4 fill-current"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zM12 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
+            Instagram
+          </a>
+          <a href={NEGOCIO.tiktok} target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 text-sm bg-beige-50/10 hover:bg-beige-50/20 transition-colors px-4 py-2 rounded-full">
+            <svg viewBox="0 0 24 24" class="w-4 h-4 fill-current"><path d="M16.6 5.82c-1.01-.88-1.6-2.15-1.6-3.62h-3.15v13.72a2.83 2.83 0 1 1-2.83-2.83c.28 0 .55.04.8.12V9.94a5.99 5.99 0 1 0 5.18 5.94V9.4a6.9 6.9 0 0 0 4 1.28V7.53a4.17 4.17 0 0 1-2.4-1.71z"/></svg>
+            TikTok
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

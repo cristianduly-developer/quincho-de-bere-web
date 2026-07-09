@@ -1,0 +1,44 @@
+---
+import '../styles/global.css';
+import WhatsAppFloat from '../components/WhatsAppFloat.astro';
+import AsistenteFlotante from '../components/AsistenteFlotante.astro';
+import Navbar from '../components/Navbar.astro';
+import MobileTabBar from '../components/MobileTabBar.astro';
+import { NEGOCIO } from '../data/negocio';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+const {
+  title = "El Quincho de Bere — Alquiler para eventos en Mar del Plata",
+  description = "Quincho con pileta, parrilla, fogón y amplio parque para cumpleaños, reuniones familiares y eventos. Consultá disponibilidad por WhatsApp.",
+} = Astro.props;
+---
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <title>{title}</title>
+    <link rel="icon" type="image/jpeg" href="/img/logo.jpeg" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={NEGOCIO.nombre} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:locale" content="es_AR" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  </head>
+  <body class="font-body antialiased overflow-x-hidden bg-beige-50 text-verde-950 pb-[4.5rem] md:pb-0">
+    <Navbar />
+    <slot />
+    <WhatsAppFloat />
+    <AsistenteFlotante />
+    <MobileTabBar />
+  </body>
+</html>

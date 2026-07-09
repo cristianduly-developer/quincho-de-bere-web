@@ -1,0 +1,41 @@
+---
+import { waLink } from '../data/negocio';
+---
+<section class="relative min-h-[100svh] flex items-end overflow-hidden bg-verde-950">
+  <div class="absolute inset-0 flex items-center justify-center">
+    <video
+      class="w-full max-w-3xl h-full max-h-[100svh] object-cover mx-auto"
+      autoplay
+      muted
+      loop
+      playsinline
+      poster="/img/logo.jpeg"
+    >
+      <source src="/video/recorrido.mp4" type="video/mp4" />
+    </video>
+  </div>
+  <div class="absolute inset-0 bg-gradient-to-t from-verde-950 via-verde-950/60 to-verde-950/20"></div>
+  <div class="absolute inset-0 bg-gradient-to-r from-verde-950 via-transparent to-verde-950"></div>
+
+  <div class="relative z-10 max-w-5xl mx-auto px-6 pb-20 pt-40 text-center w-full">
+    <img src="/img/logo.jpeg" alt="El Quincho de Bere" class="w-28 h-28 md:w-36 md:h-36 object-contain mx-auto mb-6 rounded-full bg-beige-50/95 p-2 shadow-xl" />
+    <h1 class="font-display text-4xl md:text-6xl font-semibold text-beige-50 leading-tight text-balance">
+      El lugar donde nacen<br class="hidden md:block" /> los mejores recuerdos.
+    </h1>
+    <p class="mt-5 text-base md:text-lg text-beige-100/85 max-w-xl mx-auto">
+      Cumpleaños, reuniones familiares, eventos empresariales y mucho más.
+    </p>
+    <div class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
+      <a href="#galeria" class="btn-secondary">Ver galería</a>
+      <a href={waLink('Hola! Quiero consultar disponibilidad en El Quincho de Bere.')} target="_blank" rel="noopener noreferrer" class="btn-primary">
+        Consultar disponibilidad
+      </a>
+    </div>
+  </div>
+
+  <div class="relative z-10 w-full flex justify-center pb-6 animate-bounce">
+    <a href="#por-que-elegirnos" aria-label="Bajar" class="text-beige-50/70">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+  </div>
+</section>

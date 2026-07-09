@@ -1,0 +1,71 @@
+---
+import { NAV_LINKS } from '../data/navlinks';
+import { waLink } from '../data/negocio';
+---
+<header id="navbar" class="hidden md:block fixed top-0 inset-x-0 z-30 -translate-y-full transition-transform duration-300">
+  <nav class="bg-verde-900/95 backdrop-blur-sm">
+    <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+      <a href="#" class="flex items-center gap-2.5 shrink-0">
+        <img src="/img/logo.jpeg" alt="El Quincho de Bere" class="w-8 h-8 rounded-full object-contain bg-beige-50" />
+        <span class="font-display font-semibold text-beige-50 text-sm">El Quincho de Bere</span>
+      </a>
+      <div class="flex items-center gap-7">
+        {NAV_LINKS.map((link) => (
+          <a
+            href={link.href}
+            data-nav-link={link.id}
+            class="nav-desktop-link text-sm text-beige-100/75 hover:text-oro-400 transition-colors flex items-center gap-1.5"
+          >
+            <span aria-hidden="true">{link.icon}</span>{link.label}
+          </a>
+        ))}
+      </div>
+      <a
+        href={waLink('Hola! Quiero consultar disponibilidad en El Quincho de Bere.')}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="shrink-0 inline-flex items-center gap-1.5 bg-oro-400 hover:bg-[#e2c489] text-verde-950 text-sm font-bold px-4 py-2 rounded-full transition-colors"
+      >
+        Consultar
+      </a>
+    </div>
+  </nav>
+  <div class="wood-divider"></div>
+</header>
+
+<script>
+  const navbar = document.getElementById('navbar');
+  const desktopLinks = document.querySelectorAll('.nav-desktop-link');
+  const tabLinks = document.querySelectorAll('.nav-tab-link');
+  const sectionIds = ['por-que-elegirnos', 'galeria', 'extras', 'ubicacion'];
+  const sections = sectionIds
+    .map((id) => document.getElementById(id))
+    .filter((el): el is HTMLElement => el !== null);
+
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > window.innerHeight * 0.8) {
+      navbar?.classList.remove('-translate-y-full');
+    } else {
+      navbar?.classList.add('-translate-y-full');
+    }
+  }, { passive: true });
+
+  function setActive(id: string) {
+    [...desktopLinks, ...tabLinks].forEach((link) => {
+      const isActive = link.getAttribute('data-nav-link') === id;
+      (link as HTMLElement).style.color = isActive ? '#D4AF6A' : '';
+    });
+  }
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          setActive(entry.target.id);
+        }
+      });
+    },
+    { rootMargin: '-40% 0px -55% 0px' }
+  );
+  sections.forEach((section) => observer.observe(section));
+</script>

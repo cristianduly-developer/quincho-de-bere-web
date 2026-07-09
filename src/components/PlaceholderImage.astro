@@ -1,0 +1,15 @@
+---
+interface Props {
+  label: string;
+  icon?: string;
+  class?: string;
+}
+const { label, icon = "📷", class: klass = "" } = Astro.props;
+---
+<div class={`ph-image ${klass}`}>
+  <div class="ph-label px-4">
+    <div class="text-3xl mb-1 opacity-80">{icon}</div>
+    <div class="text-xs uppercase tracking-widest font-semibold opacity-70">Foto: {label}</div>
+    <div class="text-[10px] opacity-50 mt-0.5">reemplazar por imagen real</div>
+  </div>
+</div>

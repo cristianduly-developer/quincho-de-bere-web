@@ -1,0 +1,34 @@
+---
+import { EXTRAS, waLink } from '../data/negocio';
+---
+<section id="extras" class="bg-verde-900 py-20 md:py-28 scroll-mt-16">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="text-center max-w-2xl mx-auto mb-12">
+      <p class="text-xs uppercase tracking-[0.2em] text-oro-400 font-semibold mb-3">Extras opcionales</p>
+      <h2 class="font-display text-3xl md:text-4xl font-semibold text-beige-50">Sumá magia a tu evento</h2>
+      <p class="mt-4 text-beige-100/70">Servicios adicionales para llevar tu celebración al siguiente nivel.</p>
+    </div>
+
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+      {EXTRAS.map((extra) => (
+        <div class="bg-verde-800/40 border border-beige-50/10 rounded-2xl overflow-hidden flex flex-col">
+          {extra.img && (
+            <img src={extra.img} alt={extra.titulo} class="w-full h-40 object-cover" />
+          )}
+          <div class="p-6 flex flex-col flex-1">
+            <div class="text-3xl mb-3">{extra.icon}</div>
+            <h3 class="font-display font-semibold text-beige-50 text-lg mb-1.5">{extra.titulo}</h3>
+            <p class="text-sm text-beige-100/65 flex-1">{extra.desc}</p>
+            <p class="mt-4 text-oro-400 font-semibold">{extra.precio}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <div class="text-center mt-10">
+      <a href={waLink('Hola! Quiero consultar por los extras opcionales para mi evento en El Quincho de Bere.')} target="_blank" rel="noopener noreferrer" class="btn-primary">
+        Consultar extras por WhatsApp
+      </a>
+    </div>
+  </div>
+</section>

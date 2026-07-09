@@ -1,0 +1,111 @@
+---
+import { SECTORES } from '../data/negocio';
+---
+<section id="sectores" class="max-w-6xl mx-auto px-6 py-20 md:py-28 scroll-mt-16">
+  <div class="text-center max-w-2xl mx-auto mb-10">
+    <p class="text-xs uppercase tracking-[0.2em] text-madera-600 font-semibold mb-3">El lugar</p>
+    <h2 class="font-display text-3xl md:text-4xl font-semibold text-verde-950">Recorré el Quincho por sectores</h2>
+    <p class="text-verde-950/60 text-sm mt-3">Tocá cada sector para ver sus fotos.</p>
+  </div>
+
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+    {SECTORES.map((sector, i) => (
+      <button
+        type="button"
+        class:list={["sector-tile relative rounded-2xl overflow-hidden group text-left", i === 0 ? "col-span-2 h-52 md:h-64" : "h-44 md:h-52"]}
+        data-sector-id={sector.id}
+      >
+        <img src={sector.imgs[0]} alt={sector.nombre} class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+        <div class="absolute inset-0 bg-gradient-to-t from-verde-950/90 via-verde-950/15 to-transparent"></div>
+        <span class="absolute top-3 right-3 text-[10px] uppercase tracking-widest text-beige-50 bg-verde-950/50 backdrop-blur-sm px-2.5 py-1 rounded-full opacity-0 translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 transition-all">
+          Ver fotos →
+        </span>
+        <div class="absolute bottom-3 left-3 right-3">
+          <p class="text-beige-50 font-display font-semibold text-sm md:text-lg flex items-center gap-1.5">
+            <span>{sector.icon}</span> {sector.nombre}
+          </p>
+          <p class="text-beige-100/70 text-xs mt-0.5 truncate">{sector.frase}</p>
+        </div>
+      </button>
+    ))}
+  </div>
+</section>
+
+<div id="sector-modal" class="fixed inset-0 z-[60] hidden items-center justify-center bg-verde-950/90 p-4 md:p-6">
+  <button id="sector-modal-cerrar" aria-label="Cerrar" class="absolute top-6 right-6 text-beige-50 text-3xl leading-none">×</button>
+  <div class="w-full max-w-2xl">
+    <div class="text-center mb-4">
+      <p id="sector-modal-titulo" class="font-display text-2xl md:text-3xl font-semibold text-beige-50 flex items-center justify-center gap-2"></p>
+      <p id="sector-modal-frase" class="text-beige-100/75 text-sm mt-2 max-w-lg mx-auto"></p>
+    </div>
+    <div class="relative aspect-video rounded-2xl overflow-hidden bg-verde-900">
+      <img id="sector-modal-img" src="" alt="" class="w-full h-full object-cover" />
+      <button id="sector-modal-prev" aria-label="Anterior" class="absolute left-2 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-verde-950/60 text-beige-50 flex items-center justify-center text-xl hover:bg-verde-950/80">‹</button>
+      <button id="sector-modal-next" aria-label="Siguiente" class="absolute right-2 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-verde-950/60 text-beige-50 flex items-center justify-center text-xl hover:bg-verde-950/80">›</button>
+    </div>
+    <p id="sector-modal-contador" class="text-center text-beige-100/60 text-xs mt-3"></p>
+  </div>
+</div>
+
+<script define:vars={{ sectores: SECTORES }}>
+  const tiles = document.querySelectorAll('.sector-tile');
+  const modal = document.getElementById('sector-modal');
+  const modalImg = document.getElementById('sector-modal-img');
+  const modalTitulo = document.getElementById('sector-modal-titulo');
+  const modalFrase = document.getElementById('sector-modal-frase');
+  const modalContador = document.getElementById('sector-modal-contador');
+  const btnCerrar = document.getElementById('sector-modal-cerrar');
+  const btnPrev = document.getElementById('sector-modal-prev');
+  const btnNext = document.getElementById('sector-modal-next');
+
+  let sectorActual = null;
+  let indiceActual = 0;
+
+  function render() {
+    if (!sectorActual) return;
+    modalImg.src = sectorActual.imgs[indiceActual];
+    modalImg.alt = `${sectorActual.nombre} - foto ${indiceActual + 1}`;
+    modalContador.textContent = `${indiceActual + 1} / ${sectorActual.imgs.length}`;
+  }
+
+  function abrir(sectorId) {
+    sectorActual = sectores.find((s) => s.id === sectorId);
+    if (!sectorActual) return;
+    indiceActual = 0;
+    modalTitulo.innerHTML = `<span>${sectorActual.icon}</span> ${sectorActual.nombre}`;
+    modalFrase.textContent = sectorActual.frase;
+    render();
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+  }
+
+  function cerrar() {
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+  }
+
+  tiles.forEach((tile) => {
+    tile.addEventListener('click', () => abrir(tile.getAttribute('data-sector-id')));
+  });
+
+  btnCerrar.addEventListener('click', cerrar);
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) cerrar();
+  });
+  btnPrev.addEventListener('click', () => {
+    if (!sectorActual) return;
+    indiceActual = (indiceActual - 1 + sectorActual.imgs.length) % sectorActual.imgs.length;
+    render();
+  });
+  btnNext.addEventListener('click', () => {
+    if (!sectorActual) return;
+    indiceActual = (indiceActual + 1) % sectorActual.imgs.length;
+    render();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (modal.classList.contains('hidden')) return;
+    if (e.key === 'Escape') cerrar();
+    if (e.key === 'ArrowLeft') btnPrev.click();
+    if (e.key === 'ArrowRight') btnNext.click();
+  });
+</script>

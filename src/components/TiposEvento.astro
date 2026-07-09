@@ -1,0 +1,26 @@
+---
+import PlaceholderImage from './PlaceholderImage.astro';
+import { TIPOS_EVENTO } from '../data/negocio';
+---
+<section class="max-w-6xl mx-auto px-6 py-20 md:py-28">
+  <div class="text-center max-w-2xl mx-auto mb-12">
+    <p class="text-xs uppercase tracking-[0.2em] text-madera-600 font-semibold mb-3">Experiencias</p>
+    <h2 class="font-display text-3xl md:text-4xl font-semibold text-verde-950">Para cada tipo de celebración</h2>
+  </div>
+
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+    {TIPOS_EVENTO.map((tipo) => (
+      <div class="relative rounded-2xl overflow-hidden h-40 group">
+        {tipo.img ? (
+          <img src={tipo.img} alt={tipo.nombre} class="w-full h-full object-cover" />
+        ) : (
+          <PlaceholderImage label={tipo.nombre} icon={tipo.icon} class="h-full" />
+        )}
+        <div class="absolute inset-0 bg-gradient-to-t from-verde-950/80 to-transparent"></div>
+        <p class="absolute bottom-3 left-3 right-3 text-beige-50 font-display font-semibold text-sm md:text-base">
+          {tipo.nombre}
+        </p>
+      </div>
+    ))}
+  </div>
+</section>

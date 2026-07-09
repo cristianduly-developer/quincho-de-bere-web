@@ -1,0 +1,25 @@
+---
+const reseñas = [
+  { nombre: "Valentina R.", evento: "Cumpleaños de 15", texto: "Un lugar hermoso, la pileta y el parque hicieron todo más divertido. Cristian estuvo atento a cada detalle." },
+  { nombre: "Marcos D.", evento: "Reunión familiar", texto: "Volvimos varias veces ya. El quincho está súper equipado y no falta nada, se siente como estar en casa." },
+  { nombre: "Familia Gómez", evento: "Cumpleaños infantil", texto: "Los chicos la pasaron increíble con los juegos y la pileta. Excelente atención de principio a fin." },
+];
+---
+<section class="max-w-6xl mx-auto px-6 py-20 md:py-28">
+  <div class="text-center max-w-2xl mx-auto mb-12">
+    <p class="text-xs uppercase tracking-[0.2em] text-madera-600 font-semibold mb-3">Opiniones</p>
+    <h2 class="font-display text-3xl md:text-4xl font-semibold text-verde-950">Lo que dicen quienes ya vivieron su evento acá</h2>
+    <p class="mt-3 text-xs text-madera-600 italic">✏️ Reseñas de ejemplo — las cambiamos por las tuyas reales cuando las tengas.</p>
+  </div>
+
+  <div class="grid md:grid-cols-3 gap-5">
+    {reseñas.map((r) => (
+      <div class="bg-white rounded-2xl border border-verde-800/8 p-6">
+        <div class="text-oro-400 text-sm mb-3">★★★★★</div>
+        <p class="text-verde-900/80 text-sm leading-relaxed">"{r.texto}"</p>
+        <p class="mt-4 font-display font-semibold text-verde-950 text-sm">{r.nombre}</p>
+        <p class="text-xs text-verde-900/50">{r.evento}</p>
+      </div>
+    ))}
+  </div>
+</section>

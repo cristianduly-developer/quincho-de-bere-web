@@ -1,0 +1,113 @@
+---
+import PlaceholderImage from './PlaceholderImage.astro';
+
+const categorias = ["Todas", "Exterior", "Pileta", "Quincho", "Eventos", "Parrilla", "Juegos", "Parque", "Nocturnas"];
+
+const fotos = [
+  { cat: "Exterior", label: "Frente del predio", icon: "🏡", src: "/img/galeria/exterior-frente.jpg" },
+  { cat: "Pileta", label: "Pileta 8x3m", icon: "🏊", src: "/img/galeria/pileta-principal.jpg" },
+  { cat: "Pileta", label: "Deck y solarium", icon: "☀️", src: "/img/galeria/pileta-deck.jpg" },
+  { cat: "Quincho", label: "Interior del quincho", icon: "🏠", src: "/img/galeria/quincho-interior.jpg" },
+  { cat: "Quincho", label: "Parrilla y cocina", icon: "🔥", src: "/img/galeria/quincho-parrilla-cocina.jpg" },
+  { cat: "Eventos", label: "Cumpleaños en el parque", icon: "🎉", src: "/img/galeria/eventos-cumple.jpg" },
+  { cat: "Eventos", label: "Cumpleaños en la pileta", icon: "🎈", src: "/img/galeria/cumple-pileta.jpg" },
+  { cat: "Eventos", label: "Posando en la pileta", icon: "📸", src: "/img/galeria/pileta-amigas.jpg" },
+  { cat: "Eventos", label: "Comiendo bajo los árboles", icon: "🌳", src: "/img/galeria/bajo-los-arboles.jpg" },
+  { cat: "Exterior", label: "Vista general del parque", icon: "🌳", src: "/img/galeria/rincon-fotos.jpg" },
+  { cat: "Parrilla", label: "Asado en marcha", icon: "🥩", src: "/img/galeria/parrilla-asado.jpg" },
+  { cat: "Parrilla", label: "Parrillada completa", icon: "🍖", src: "/img/galeria/parrillada-completa.jpg" },
+  { cat: "Juegos", label: "Ping pong y metegol", icon: "🏓", src: "/img/galeria/juegos-pingpong.jpg" },
+  { cat: "Juegos", label: "Juegos infantiles", icon: "🎠", src: "/img/galeria/juegos-infantiles.jpg" },
+  { cat: "Parque", label: "Amplio espacio verde", icon: "🌳", src: "/img/galeria/parque-verde.jpg" },
+  { cat: "Parque", label: "Hamacas paraguayas", icon: "🌿", src: "/img/galeria/parque-hamacas.jpg" },
+  { cat: "Nocturnas", label: "Fogón de noche", icon: "🔥", src: "/img/galeria/nocturna-fogon.jpg" },
+  { cat: "Nocturnas", label: "Fogón en familia", icon: "👨‍👩‍👧‍👦", src: "/img/galeria/fogon-en-familia.jpg" },
+  { cat: "Nocturnas", label: "Noche en la pérgola", icon: "🌙", src: "/img/galeria/nocturna-pergola.jpg" },
+];
+---
+<section id="galeria" class="max-w-6xl mx-auto px-6 py-20 md:py-28 scroll-mt-16">
+  <div class="text-center max-w-2xl mx-auto mb-10">
+    <p class="text-xs uppercase tracking-[0.2em] text-madera-600 font-semibold mb-3">Galería</p>
+    <h2 class="font-display text-3xl md:text-4xl font-semibold text-verde-950">Conocé el lugar</h2>
+  </div>
+
+  <div class="flex flex-wrap gap-2 justify-center mb-8" id="galeria-filtros">
+    {categorias.map((cat, i) => (
+      <button
+        type="button"
+        data-cat={cat}
+        class:list={["galeria-filtro text-xs md:text-sm px-4 py-1.5 rounded-full border transition-colors", i === 0 ? "bg-verde-900 text-beige-50 border-verde-900" : "border-verde-800/20 text-verde-900/70 hover:border-verde-800/50"]}
+      >
+        {cat}
+      </button>
+    ))}
+  </div>
+
+  <div id="galeria-grid" class="columns-2 md:columns-3 gap-4 space-y-4">
+    {fotos.map((foto, i) => (
+      <button
+        type="button"
+        class="galeria-item block w-full break-inside-avoid rounded-xl overflow-hidden"
+        data-cat={foto.cat}
+        data-label={foto.label}
+        data-icon={foto.icon}
+        data-src={foto.src ?? ""}
+      >
+        {foto.src ? (
+          <img src={foto.src} alt={foto.label} class:list={["w-full object-cover", i % 3 === 0 ? "h-64" : "h-48"]} />
+        ) : (
+          <PlaceholderImage label={foto.label} icon={foto.icon} class={i % 3 === 0 ? "h-64" : "h-48"} />
+        )}
+      </button>
+    ))}
+  </div>
+</section>
+
+<div id="lightbox" class="fixed inset-0 z-[60] hidden items-center justify-center bg-verde-950/90 p-6">
+  <button id="lightbox-cerrar" aria-label="Cerrar" class="absolute top-6 right-6 text-beige-50 text-3xl leading-none">×</button>
+  <div id="lightbox-content" class="w-full max-w-2xl aspect-video rounded-2xl overflow-hidden"></div>
+</div>
+
+<script>
+  const filtros = document.querySelectorAll('.galeria-filtro');
+  const items = document.querySelectorAll('.galeria-item');
+
+  filtros.forEach(btn => {
+    btn.addEventListener('click', () => {
+      filtros.forEach(b => b.className = 'galeria-filtro text-xs md:text-sm px-4 py-1.5 rounded-full border transition-colors border-verde-800/20 text-verde-900/70 hover:border-verde-800/50');
+      btn.className = 'galeria-filtro text-xs md:text-sm px-4 py-1.5 rounded-full border transition-colors bg-verde-900 text-beige-50 border-verde-900';
+      const cat = btn.getAttribute('data-cat');
+      items.forEach(item => {
+        const match = cat === 'Todas' || item.getAttribute('data-cat') === cat;
+        item.classList.toggle('hidden', !match);
+      });
+    });
+  });
+
+  const lightbox = document.getElementById('lightbox');
+  const lightboxContent = document.getElementById('lightbox-content');
+  const lightboxCerrar = document.getElementById('lightbox-cerrar');
+
+  items.forEach(item => {
+    item.addEventListener('click', () => {
+      const label = item.getAttribute('data-label');
+      const icon = item.getAttribute('data-icon');
+      const src = item.getAttribute('data-src');
+      lightboxContent.innerHTML = src
+        ? `<img src="${src}" alt="${label}" class="w-full h-full object-cover" />`
+        : `<div class="ph-image w-full h-full"><div class="ph-label px-4"><div class="text-5xl mb-2 opacity-80">${icon}</div><div class="text-sm uppercase tracking-widest font-semibold opacity-70">Foto: ${label}</div></div></div>`;
+      lightbox.classList.remove('hidden');
+      lightbox.classList.add('flex');
+    });
+  });
+  lightboxCerrar.addEventListener('click', () => {
+    lightbox.classList.add('hidden');
+    lightbox.classList.remove('flex');
+  });
+  lightbox.addEventListener('click', (e) => {
+    if (e.target === lightbox) {
+      lightbox.classList.add('hidden');
+      lightbox.classList.remove('flex');
+    }
+  });
+</script>

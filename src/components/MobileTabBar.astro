@@ -1,0 +1,27 @@
+---
+import { NAV_LINKS } from '../data/navlinks';
+import { waLink } from '../data/negocio';
+---
+<nav class="md:hidden fixed bottom-0 inset-x-0 z-30 bg-verde-900 px-2 pt-2 pb-[max(0.5rem,env(safe-area-inset-bottom))]">
+  <div class="flex items-center justify-around">
+    {NAV_LINKS.filter((l) => l.id !== 'inicio').map((link) => (
+      <a
+        href={link.href}
+        data-nav-link={link.id}
+        class="nav-tab-link flex flex-col items-center gap-0.5 text-beige-100/60 px-1.5 py-1 min-w-[3.5rem]"
+      >
+        <span class="text-lg leading-none" aria-hidden="true">{link.icon}</span>
+        <span class="text-[10px] font-medium">{link.label}</span>
+      </a>
+    ))}
+    <a
+      href={waLink('Hola! Quiero consultar disponibilidad en El Quincho de Bere.')}
+      target="_blank"
+      rel="noopener noreferrer"
+      class="flex flex-col items-center gap-0.5 bg-oro-400 text-verde-950 rounded-xl px-3 py-1.5"
+    >
+      <span class="text-lg leading-none" aria-hidden="true">💬</span>
+      <span class="text-[10px] font-bold">Consultar</span>
+    </a>
+  </div>
+</nav>

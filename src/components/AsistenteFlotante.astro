@@ -1,0 +1,147 @@
+---
+import { FAQS, NEGOCIO, waLink } from '../data/negocio';
+
+const faqsJson = JSON.stringify(FAQS.map(f => ({ a: f.a, keywords: f.keywords })));
+const waReserva = waLink('Hola! Quiero consultar disponibilidad en El Quincho de Bere.');
+---
+<button
+  id="asistente-toggle"
+  aria-label="Preguntale al asistente del Quincho de Bere"
+  class="fixed bottom-24 right-6 z-40 flex items-center justify-center w-14 h-14 rounded-full bg-verde-800 text-oro-400 shadow-lg shadow-black/20 hover:scale-105 transition-transform"
+>
+  <span class="text-2xl">💬</span>
+</button>
+
+<div
+  id="asistente-panel"
+  class="fixed bottom-24 right-6 z-50 hidden w-[calc(100vw-3rem)] max-w-sm h-[28rem] max-h-[70vh] bg-beige-50 rounded-2xl shadow-2xl border border-verde-800/10 flex-col overflow-hidden"
+>
+  <div class="bg-verde-900 text-beige-100 px-4 py-3 flex items-center justify-between">
+    <div>
+      <p class="font-display font-semibold text-sm">Asistente del Quincho</p>
+      <p class="text-[11px] text-beige-200/70">Respuestas rápidas · {NEGOCIO.nombre}</p>
+    </div>
+    <button id="asistente-cerrar" aria-label="Cerrar asistente" class="text-beige-100/70 hover:text-white text-xl leading-none">×</button>
+  </div>
+
+  <div id="asistente-mensajes" class="flex-1 overflow-y-auto px-4 py-3 space-y-3 text-sm scrollbar-none">
+    <div class="bg-verde-800/10 rounded-xl rounded-tl-none px-3 py-2 max-w-[85%]">
+      ¡Hola! Preguntame sobre capacidad, horarios, qué incluye, mascotas, ubicación o lo que necesites saber del Quincho.
+    </div>
+  </div>
+
+  <div class="border-t border-verde-800/10 p-3 flex flex-wrap gap-1.5">
+    <button type="button" class="asistente-chip text-[11px] px-2.5 py-1 rounded-full bg-verde-800/10 hover:bg-verde-800/20 transition-colors">¿Cuántas personas entran?</button>
+    <button type="button" class="asistente-chip text-[11px] px-2.5 py-1 rounded-full bg-verde-800/10 hover:bg-verde-800/20 transition-colors">¿Hay pileta?</button>
+    <button type="button" class="asistente-chip text-[11px] px-2.5 py-1 rounded-full bg-verde-800/10 hover:bg-verde-800/20 transition-colors">Quiero reservar</button>
+  </div>
+
+  <form id="asistente-form" class="border-t border-verde-800/10 p-3 flex gap-2">
+    <input
+      id="asistente-input"
+      type="text"
+      placeholder="Escribí tu pregunta..."
+      autocomplete="off"
+      class="flex-1 rounded-full bg-white border border-verde-800/15 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-oro-400"
+    />
+    <button type="submit" aria-label="Enviar" class="w-9 h-9 shrink-0 rounded-full bg-verde-800 text-oro-400 flex items-center justify-center">➤</button>
+  </form>
+</div>
+
+<script define:vars={{ faqsJson, waReserva }}>
+  const FAQS = JSON.parse(faqsJson);
+  const RESERVA_KEYWORDS = ['reservar', 'reserva', 'disponibilidad', 'disponible', 'fecha', 'alquilar', 'alquiler', 'cotizar', 'precio', 'costo', 'cuanto sale', 'presupuesto'];
+
+  const toggle = document.getElementById('asistente-toggle');
+  const panel = document.getElementById('asistente-panel');
+  const cerrar = document.getElementById('asistente-cerrar');
+  const mensajes = document.getElementById('asistente-mensajes');
+  const form = document.getElementById('asistente-form');
+  const input = document.getElementById('asistente-input');
+  const chips = document.querySelectorAll('.asistente-chip');
+
+  function abrir() {
+    panel.classList.remove('hidden');
+    panel.classList.add('flex');
+    toggle.classList.add('hidden');
+  }
+  function cerrarPanel() {
+    panel.classList.add('hidden');
+    panel.classList.remove('flex');
+    toggle.classList.remove('hidden');
+  }
+  toggle.addEventListener('click', abrir);
+  cerrar.addEventListener('click', cerrarPanel);
+
+  function normalizar(str) {
+    return str.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+  }
+
+  function agregarMensaje(texto, esUsuario, esHtml) {
+    const burbuja = document.createElement('div');
+    burbuja.className = esUsuario
+      ? 'bg-verde-800 text-white rounded-xl rounded-tr-none px-3 py-2 max-w-[85%] ml-auto'
+      : 'bg-verde-800/10 rounded-xl rounded-tl-none px-3 py-2 max-w-[85%]';
+    if (esHtml) {
+      burbuja.innerHTML = texto;
+    } else {
+      burbuja.textContent = texto;
+    }
+    mensajes.appendChild(burbuja);
+    mensajes.scrollTop = mensajes.scrollHeight;
+  }
+
+  function responder(pregunta) {
+    const norm = normalizar(pregunta);
+
+    const intencionReserva = RESERVA_KEYWORDS.some(k => norm.includes(normalizar(k)));
+    if (intencionReserva) {
+      agregarMensaje(
+        `Con mucho gusto. Para coordinar la reserva te comunicamos con Cristian. <br/><a href="${waReserva}" target="_blank" rel="noopener" class="inline-block mt-2 text-xs font-semibold bg-[#25D366] text-white px-3 py-1.5 rounded-full">Abrir WhatsApp</a>`,
+        false,
+        true
+      );
+      return;
+    }
+
+    let mejorMatch = null;
+    let mejorScore = 0;
+    for (const faq of FAQS) {
+      let score = 0;
+      for (const kw of faq.keywords) {
+        if (norm.includes(normalizar(kw))) score++;
+      }
+      if (score > mejorScore) {
+        mejorScore = score;
+        mejorMatch = faq;
+      }
+    }
+
+    if (mejorMatch) {
+      agregarMensaje(mejorMatch.a, false);
+    } else {
+      agregarMensaje(
+        `No tengo esa respuesta a mano. Preguntame por capacidad, horarios, qué incluye, ubicación o mascotas — o hablá directo con Cristian. <br/><a href="${waReserva}" target="_blank" rel="noopener" class="inline-block mt-2 text-xs font-semibold bg-[#25D366] text-white px-3 py-1.5 rounded-full">Abrir WhatsApp</a>`,
+        false,
+        true
+      );
+    }
+  }
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const valor = input.value.trim();
+    if (!valor) return;
+    agregarMensaje(valor, true);
+    input.value = '';
+    setTimeout(() => responder(valor), 300);
+  });
+
+  chips.forEach(chip => {
+    chip.addEventListener('click', () => {
+      const texto = chip.textContent.trim();
+      agregarMensaje(texto, true);
+      setTimeout(() => responder(texto), 300);
+    });
+  });
+</script>
