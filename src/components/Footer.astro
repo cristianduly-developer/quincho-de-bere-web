@@ -1,5 +1,5 @@
 ---
-import { NEGOCIO, waLink } from '../data/negocio';
+import { NEGOCIO, waLink, AGENDA_URL } from '../data/negocio';
 ---
 
 <!-- CTA noche -->
@@ -11,7 +11,10 @@ import { NEGOCIO, waLink } from '../data/negocio';
     <h2>Tu próxima celebración<br/>empieza acá.</h2>
     <p>Contanos qué estás festejando y te ayudamos a elegir el turno ideal.</p>
     <div class="ctas">
-      <a href={waLink('Hola! Quiero reservar una fecha en El Quincho de Bere.')} class="btn btn-primary" target="_blank" rel="noopener noreferrer">
+      <a href={AGENDA_URL} class="btn btn-primary" target="_blank" rel="noopener noreferrer">
+        Ver fechas disponibles
+      </a>
+      <a href={waLink('Hola! Quiero reservar una fecha en El Quincho de Bere.')} class="btn btn-ghost" target="_blank" rel="noopener noreferrer">
         Consultar por WhatsApp
       </a>
       <a href="#sectores" class="btn btn-ghost">Ver el lugar de nuevo</a>

@@ -1,5 +1,5 @@
 ---
-import { TURNOS, waLink } from '../data/negocio';
+import { TURNOS, AGENDA_URL } from '../data/negocio';
 
 const iconos: Record<string, string> = { dia: '☀️', noche: '🌙', completo: '✨' };
 const descripciones: Record<string, string> = {
@@ -31,7 +31,7 @@ const descripciones: Record<string, string> = {
     </div>
 
     <div class="arc-cta">
-      <a href={waLink('Hola! Quiero consultar disponibilidad en El Quincho de Bere.')} target="_blank" rel="noopener noreferrer" class="btn btn-gold">
+      <a href={AGENDA_URL} target="_blank" rel="noopener noreferrer" class="btn btn-gold">
         Consultar disponibilidad
       </a>
     </div>

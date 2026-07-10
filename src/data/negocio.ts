@@ -24,6 +24,8 @@ export const DISPONIBILIDAD = {
   orgId: "0a4a642c-b3d1-4ce3-b325-bb40b188567b",
 };
 
+export const AGENDA_URL = `https://eventos.solucionesmdp.com.ar/reservar/${DISPONIBILIDAD.orgId}`;
+
 export function waLink(mensaje: string) {
   return `https://wa.me/${NEGOCIO.whatsappNumero}?text=${encodeURIComponent(mensaje)}`;
 }
