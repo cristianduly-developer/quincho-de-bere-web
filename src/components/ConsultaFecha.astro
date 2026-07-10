@@ -1,103 +1,204 @@
 ---
-import { TURNOS, AGENDA_URL } from '../data/negocio';
-
-const iconos: Record<string, string> = { dia: '☀️', noche: '🌙', completo: '✨' };
-const descripciones: Record<string, string> = {
-  dia: 'Ideal para cumpleaños infantiles: sol, pileta y toda la tarde de juegos.',
-  noche: 'Fogón encendido, luces cálidas y la previa perfecta entre amigos.',
-  completo: 'Del mediodía hasta la noche cerrada — sin apurar ningún momento.',
-};
+import { NEGOCIO, TURNOS, DISPONIBILIDAD } from '../data/negocio';
 ---
-<section id="turnos" class="dayarc">
+<section id="disponibilidad" class="consulta-section">
   <div class="wrap">
-    <p class="eyebrow">Tu evento, a tu ritmo</p>
-    <h2 class="headline">Un día entero,<br/>de <em>principio a fin</em>.</h2>
-    <p class="lead">Del mediodía al fogón de la noche: elegí el turno que mejor se acomode a tu celebración.</p>
+    <div class="consulta-card">
+      <p class="eyebrow">Disponibilidad</p>
+      <h2 class="headline">Mirá qué fechas<br/>están <em>libres</em>.</h2>
 
-    <div class="arc-track">
-      <div class="arc-line"></div>
-      <div class="arc-stops">
-        {TURNOS.map((turno) => (
-          <div class="stop">
-            <div class="stop-dot">{iconos[turno.tipo]}</div>
-            <div class="stop-card">
-              <h3>{turno.nombre}</h3>
-              <div class="hrs">{turno.horario}</div>
-              <p>{descripciones[turno.tipo]}</p>
-            </div>
-          </div>
-        ))}
+      <div class="cal-nav">
+        <button id="cf-prev" type="button" aria-label="Mes anterior">‹</button>
+        <span id="cf-mes-label" class="cal-mes"></span>
+        <button id="cf-next" type="button" aria-label="Mes siguiente">›</button>
       </div>
-    </div>
 
-    <div class="arc-cta">
-      <a href={AGENDA_URL} target="_blank" rel="noopener noreferrer" class="btn btn-gold">
-        Consultar disponibilidad
+      <div class="cal-dias-semana">
+        <span>L</span><span>M</span><span>X</span><span>J</span><span>V</span><span>S</span><span>D</span>
+      </div>
+      <div id="cf-grid" class="cal-grid"></div>
+
+      <div class="leyenda">
+        <span><i style="background:#639922"></i>Libre</span>
+        <span><i style="background:#EF9F27"></i>Un turno libre</span>
+        <span><i style="background:#D85A30"></i>Ocupado</span>
+        <span><i style="background:#E2DED2"></i>No disponible</span>
+      </div>
+
+      <div class="turno-wrap">
+        <label for="cf-turno">Turno</label>
+        <select id="cf-turno">
+          {TURNOS.map((t) => (
+            <option value={`${t.nombre} (${t.horario})`} data-tipo={t.tipo}>{t.nombre} — {t.horario}</option>
+          ))}
+        </select>
+        <p id="cf-turno-aviso" class="turno-aviso hidden"></p>
+      </div>
+
+      <a id="cf-boton" href="#" target="_blank" rel="noopener noreferrer" class="cf-btn disabled">
+        Elegí una fecha libre
       </a>
+      <p class="cf-nota">Esto no reserva nada — solo nos avisa qué fecha te interesa para coordinar por WhatsApp.</p>
     </div>
   </div>
 </section>
 
 <style>
-  .dayarc {
-    position: relative;
-    background: var(--verde-950);
-    color: var(--beige-50);
-    overflow: hidden;
-    padding: 96px 0;
-  }
-  .dayarc::before {
-    content: "";
-    position: absolute; inset: 0;
-    background: linear-gradient(100deg, #efe4d0 0%, #d4af6a 30%, #8b5e3c 55%, #16302a 80%, #0f1f19 100%);
-    opacity: .09;
-  }
-  .wrap { position: relative; z-index: 1; max-width: 1180px; margin: 0 auto; padding: 0 24px; }
-  .eyebrow {
-    font-size: .72rem; letter-spacing: .22em; text-transform: uppercase;
-    color: rgba(255,252,246,.75); font-weight: 700; margin: 0 0 12px;
-  }
-  .headline {
-    font-family: var(--font-display); font-weight: 600; color: var(--beige-50);
-    font-size: clamp(1.9rem, 3.6vw, 2.8rem);
-    line-height: 1.1; margin: 0 0 14px; letter-spacing: -0.01em;
-  }
-  .headline em { font-style: italic; color: var(--beige-50); font-weight: 500; text-decoration: underline; text-decoration-color: rgba(255,252,246,.3); text-underline-offset: 6px; }
-  .lead { color: rgba(255,252,246,.72); font-size: 1.02rem; line-height: 1.6; max-width: 46ch; }
+  .consulta-section { padding: 96px 0; background: var(--beige-100); }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 0 24px; display: flex; justify-content: center; }
 
-  .arc-track { position: relative; margin-top: 70px; padding-top: 10px; }
-  .arc-line {
-    position: absolute; top: 26px; left: 0; right: 0; height: 2px;
-    background: linear-gradient(90deg, rgba(255,252,246,.5), rgba(255,252,246,.1));
+  .consulta-card {
+    background: var(--beige-50);
+    border-radius: 28px;
+    box-shadow: 0 4px 40px rgba(15,31,25,.10);
+    border: 1px solid rgba(15,31,25,.08);
+    padding: 40px;
+    width: 100%; max-width: 460px;
   }
-  .arc-stops { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; position: relative; }
-  @media(max-width: 820px) {
-    .arc-stops { grid-template-columns: 1fr; gap: 40px; }
-    .arc-line { display: none; }
-  }
-  .stop { position: relative; padding-top: 52px; }
-  .stop-dot {
-    position: absolute; top: 12px; left: 0;
-    width: 28px; height: 28px; border-radius: 50%;
-    background: var(--verde-950); border: 2px solid var(--oro-400);
-    display: flex; align-items: center; justify-content: center; font-size: .85rem;
-  }
-  .stop-card {
-    background: rgba(255,252,246,.08); border: 1px solid rgba(255,252,246,.18);
-    border-radius: 18px; padding: 22px 22px 24px; backdrop-filter: blur(6px);
-  }
-  .stop-card h3 { font-family: var(--font-display); font-weight: 600; font-size: 1.15rem; margin: 0 0 4px; color: var(--beige-50); }
-  .stop-card .hrs { color: var(--oro-400); font-weight: 700; font-size: .85rem; margin-bottom: 10px; }
-  .stop-card p { margin: 0; font-size: .85rem; color: rgba(255,252,246,.72); line-height: 1.55; }
 
-  .arc-cta { margin-top: 48px; text-align: center; }
-  .btn {
-    display: inline-flex; align-items: center; gap: .5rem;
-    padding: .95rem 2rem; border-radius: 999px;
-    font-weight: 700; font-size: .92rem;
+  .eyebrow { font-size: .72rem; letter-spacing: .22em; text-transform: uppercase; color: var(--madera-600); font-weight: 700; margin: 0 0 10px; }
+  .headline { font-family: var(--font-display); font-weight: 600; font-size: clamp(1.6rem, 3vw, 2.2rem); line-height: 1.1; margin: 0 0 28px; letter-spacing: -0.01em; }
+  .headline em { font-style: italic; color: var(--madera-600); font-weight: 500; }
+
+  .cal-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+  .cal-nav button { width: 32px; height: 32px; border-radius: 50%; border: none; background: none; cursor: pointer; font-size: 1.2rem; color: var(--verde-900); display: flex; align-items: center; justify-content: center; }
+  .cal-nav button:hover { background: rgba(15,31,25,.08); }
+  .cal-nav button:disabled { opacity: .3; cursor: default; }
+  .cal-mes { font-family: var(--font-display); font-weight: 600; font-size: .95rem; color: var(--verde-950); text-transform: capitalize; }
+
+  .cal-dias-semana { display: grid; grid-template-columns: repeat(7,1fr); gap: 4px; text-align: center; font-size: .68rem; font-weight: 700; color: rgba(15,31,25,.45); margin-bottom: 4px; }
+  .cal-grid { display: grid; grid-template-columns: repeat(7,1fr); gap: 4px; }
+
+  .leyenda { display: flex; flex-wrap: wrap; gap: 10px 16px; margin-top: 16px; font-size: .72rem; color: rgba(15,31,25,.6); }
+  .leyenda span { display: flex; align-items: center; gap: 6px; }
+  .leyenda i { display: block; width: 10px; height: 10px; border-radius: 50%; flex: none; }
+
+  .turno-wrap { margin-top: 20px; }
+  .turno-wrap label { display: block; font-size: .78rem; font-weight: 700; color: rgba(15,31,25,.65); margin-bottom: 6px; }
+  .turno-wrap select { width: 100%; border-radius: 12px; background: #fff; border: 1px solid rgba(15,31,25,.15); padding: 10px 14px; font-size: .88rem; font-family: var(--font-body); color: var(--verde-950); outline: none; }
+  .turno-wrap select:focus { box-shadow: 0 0 0 2px var(--oro-400); }
+  .turno-aviso { font-size: .75rem; color: var(--madera-600); margin-top: 6px; }
+  .turno-aviso.hidden { display: none; }
+
+  .cf-btn {
+    display: flex; align-items: center; justify-content: center;
+    width: 100%; margin-top: 20px;
+    padding: 13px 20px; border-radius: 999px;
+    background: var(--oro-400); color: var(--verde-950);
+    font-weight: 700; font-size: .92rem; text-decoration: none;
     transition: transform .18s ease, box-shadow .18s ease;
-    white-space: nowrap; text-decoration: none;
   }
-  .btn-gold { background: var(--oro-400); color: var(--verde-950); }
-  .btn-gold:hover { transform: translateY(-2px); box-shadow: 0 10px 24px -8px rgba(212,175,106,.55); }
+  .cf-btn:not(.disabled):hover { transform: translateY(-2px); box-shadow: 0 10px 24px -8px rgba(212,175,106,.55); }
+  .cf-btn.disabled { opacity: .4; pointer-events: none; }
+
+  .cf-nota { text-align: center; font-size: .72rem; color: rgba(15,31,25,.45); margin-top: 12px; }
 </style>
+
+<script define:vars={{
+  whatsappNumero: NEGOCIO.whatsappNumero,
+  reaperturaFecha: NEGOCIO.reaperturaFecha,
+  supabaseUrl: DISPONIBILIDAD.supabaseUrl,
+  supabaseAnonKey: DISPONIBILIDAD.supabaseAnonKey,
+  orgId: DISPONIBILIDAD.orgId,
+}}>
+  const grid = document.getElementById('cf-grid');
+  const mesLabel = document.getElementById('cf-mes-label');
+  const prevBtn = document.getElementById('cf-prev');
+  const nextBtn = document.getElementById('cf-next');
+  const turnoSelect = document.getElementById('cf-turno');
+  const turnoAviso = document.getElementById('cf-turno-aviso');
+  const boton = document.getElementById('cf-boton');
+
+  const hoy = new Date(); hoy.setHours(0,0,0,0);
+  let mesActual = new Date(hoy.getFullYear(), hoy.getMonth(), 1);
+  let fechaSeleccionada = null;
+  let ocupacion = new Map();
+  let cargando = true;
+
+  function ymd(d) {
+    return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+  }
+
+  async function cargarOcupadas() {
+    try {
+      const res = await fetch(`${supabaseUrl}/rest/v1/rpc/get_disponibilidad`, {
+        method: 'POST',
+        headers: { 'Content-Type':'application/json', 'apikey': supabaseAnonKey, 'Authorization': `Bearer ${supabaseAnonKey}` },
+        body: JSON.stringify({ p_org_id: orgId }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        ocupacion = new Map(data.map(r => [r.fecha, { dia: !!r.dia_ocupado, noche: !!r.noche_ocupado }]));
+      }
+    } catch {}
+    cargando = false;
+    render();
+  }
+
+  function render() {
+    mesLabel.textContent = mesActual.toLocaleDateString('es-AR', { month:'long', year:'numeric' });
+    const primerDia = (mesActual.getDay() + 6) % 7;
+    const diasEnMes = new Date(mesActual.getFullYear(), mesActual.getMonth()+1, 0).getDate();
+    grid.innerHTML = '';
+    for (let i=0; i<primerDia; i++) grid.appendChild(document.createElement('div'));
+    for (let dia=1; dia<=diasEnMes; dia++) {
+      const fecha = new Date(mesActual.getFullYear(), mesActual.getMonth(), dia);
+      const fechaStr = ymd(fecha);
+      const noDisp = fecha < hoy || fechaStr < reaperturaFecha || cargando;
+      const est = ocupacion.get(fechaStr) || { dia:false, noche:false };
+      const totOcup = est.dia && est.noche;
+      const parcOcup = est.dia !== est.noche;
+
+      const btn = document.createElement('button');
+      btn.type = 'button'; btn.textContent = String(dia);
+      btn.style.cssText = 'height:36px;border-radius:10px;font-size:.78rem;font-weight:600;border:none;width:100%;';
+
+      if (noDisp || totOcup) {
+        btn.style.background = totOcup ? '#D85A30' : '#E2DED2';
+        btn.style.color = totOcup ? '#fff' : '#8B897F';
+        btn.style.cursor = 'not-allowed';
+        btn.disabled = true;
+      } else {
+        const esSel = fechaStr === fechaSeleccionada;
+        btn.style.background = esSel ? '#16302A' : (parcOcup ? '#EF9F27' : '#639922');
+        btn.style.color = parcOcup && !esSel ? '#3D2600' : '#fff';
+        btn.style.cursor = 'pointer';
+        if (esSel) btn.style.outline = '2px solid #16302A';
+        btn.addEventListener('click', () => { fechaSeleccionada = fechaStr; render(); actualizarTurnos(); });
+      }
+      grid.appendChild(btn);
+    }
+    prevBtn.disabled = mesActual.getFullYear()===hoy.getFullYear() && mesActual.getMonth()===hoy.getMonth();
+  }
+
+  function actualizarTurnos() {
+    const est = fechaSeleccionada ? (ocupacion.get(fechaSeleccionada)||{dia:false,noche:false}) : {dia:false,noche:false};
+    [...turnoSelect.options].forEach(opt => {
+      const tipo = opt.getAttribute('data-tipo');
+      opt.disabled = (tipo==='dia'&&est.dia)||(tipo==='noche'&&est.noche)||(tipo==='completo'&&(est.dia||est.noche));
+    });
+    if (turnoSelect.selectedOptions[0]?.disabled) {
+      const libre = [...turnoSelect.options].find(o=>!o.disabled);
+      if (libre) turnoSelect.value = libre.value;
+    }
+    turnoAviso.textContent = fechaSeleccionada&&(est.dia||est.noche) ? 'Para esta fecha ya hay un turno ocupado — dejamos seleccionado el que sigue libre.' : '';
+    turnoAviso.classList.toggle('hidden', !fechaSeleccionada||(!(est.dia||est.noche)));
+    actualizarBoton();
+  }
+
+  function actualizarBoton() {
+    if (!fechaSeleccionada) { boton.classList.add('disabled'); boton.textContent='Elegí una fecha libre'; return; }
+    boton.classList.remove('disabled');
+    boton.textContent = 'Consultar por WhatsApp';
+    const turno = turnoSelect.value;
+    const fechaFmt = new Date(fechaSeleccionada+'T00:00:00').toLocaleDateString('es-AR',{day:'numeric',month:'long',year:'numeric'});
+    boton.href = `https://wa.me/${whatsappNumero}?text=${encodeURIComponent(`Hola! Quiero consultar disponibilidad en El Quincho de Bere para el ${fechaFmt}, ${turno}.`)}`;
+  }
+
+  prevBtn.addEventListener('click', () => { mesActual = new Date(mesActual.getFullYear(), mesActual.getMonth()-1, 1); render(); });
+  nextBtn.addEventListener('click', () => { mesActual = new Date(mesActual.getFullYear(), mesActual.getMonth()+1, 1); render(); });
+  turnoSelect.addEventListener('change', actualizarBoton);
+
+  render();
+  cargarOcupadas();
+</script>
