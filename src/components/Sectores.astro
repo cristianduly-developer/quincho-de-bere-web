@@ -1,54 +1,120 @@
 ---
 import { SECTORES } from '../data/negocio';
 ---
-<section id="sectores" class="max-w-6xl mx-auto px-6 py-20 md:py-28 scroll-mt-16">
-  <div class="text-center max-w-2xl mx-auto mb-10">
-    <p class="text-xs uppercase tracking-[0.2em] text-madera-600 font-semibold mb-3">El lugar</p>
-    <h2 class="font-display text-3xl md:text-4xl font-semibold text-verde-950">Recorré el Quincho por sectores</h2>
-    <p class="text-verde-950/60 text-sm mt-3">Tocá cada sector para ver sus fotos.</p>
-  </div>
+<section id="sectores" class="reveal">
+  <div class="wrap">
+    <p class="eyebrow">El lugar</p>
+    <h2 class="headline">Recorré el Quincho<br/>por <em>sectores</em>.</h2>
+    <p class="lead">Tocá cada foto para conocer cada rincón.</p>
 
-  <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-    {SECTORES.map((sector, i) => (
-      <button
-        type="button"
-        class:list={["sector-tile relative rounded-2xl overflow-hidden group text-left", i === 0 ? "col-span-2 h-52 md:h-64" : "h-44 md:h-52"]}
-        data-sector-id={sector.id}
-      >
-        <img src={sector.imgs[0]} alt={sector.nombre} class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
-        <div class="absolute inset-0 bg-gradient-to-t from-verde-950/90 via-verde-950/15 to-transparent"></div>
-        <span class="absolute top-3 right-3 text-[10px] uppercase tracking-widest text-beige-50 bg-verde-950/50 backdrop-blur-sm px-2.5 py-1 rounded-full opacity-0 translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 transition-all">
-          Ver fotos →
-        </span>
-        <div class="absolute bottom-3 left-3 right-3">
-          <p class="text-beige-50 font-display font-semibold text-sm md:text-lg flex items-center gap-1.5">
-            <span>{sector.icon}</span> {sector.nombre}
-          </p>
-          <p class="text-beige-100/70 text-xs mt-0.5 truncate">{sector.frase}</p>
-        </div>
-      </button>
-    ))}
+    <div class="bento">
+      {SECTORES.slice(0, 5).map((sector, i) => (
+        <button
+          type="button"
+          class:list={["tile", i === 0 ? "big" : ""]}
+          data-sector-id={sector.id}
+        >
+          <img src={sector.imgs[0]} alt={sector.nombre} />
+          <div class="tile-scrim"></div>
+          <div class="tile-label">
+            <div class="name"><span>{sector.icon}</span> {sector.nombre}</div>
+            {i === 0 && <div class="sub">{sector.frase}</div>}
+          </div>
+        </button>
+      ))}
+    </div>
   </div>
 </section>
 
-<div id="sector-modal" class="fixed inset-0 z-[60] hidden items-center justify-center bg-verde-950/90 p-4 md:p-6">
-  <button id="sector-modal-cerrar" aria-label="Cerrar" class="absolute top-6 right-6 text-beige-50 text-3xl leading-none">×</button>
-  <div class="w-full max-w-2xl">
-    <div class="text-center mb-4">
-      <p id="sector-modal-titulo" class="font-display text-2xl md:text-3xl font-semibold text-beige-50 flex items-center justify-center gap-2"></p>
-      <p id="sector-modal-frase" class="text-beige-100/75 text-sm mt-2 max-w-lg mx-auto"></p>
+<!-- Modal -->
+<div id="sector-modal" class="sector-modal hidden">
+  <button id="sector-modal-cerrar" class="modal-cerrar" aria-label="Cerrar">×</button>
+  <div class="modal-inner">
+    <div class="modal-header">
+      <p id="sector-modal-titulo" class="modal-titulo"></p>
+      <p id="sector-modal-frase" class="modal-frase"></p>
     </div>
-    <div class="relative aspect-video rounded-2xl overflow-hidden bg-verde-900">
-      <img id="sector-modal-img" src="" alt="" class="w-full h-full object-cover" />
-      <button id="sector-modal-prev" aria-label="Anterior" class="absolute left-2 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-verde-950/60 text-beige-50 flex items-center justify-center text-xl hover:bg-verde-950/80">‹</button>
-      <button id="sector-modal-next" aria-label="Siguiente" class="absolute right-2 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-verde-950/60 text-beige-50 flex items-center justify-center text-xl hover:bg-verde-950/80">›</button>
+    <div class="modal-img-wrap">
+      <img id="sector-modal-img" src="" alt="" />
+      <button id="sector-modal-prev" aria-label="Anterior" class="modal-nav modal-prev">‹</button>
+      <button id="sector-modal-next" aria-label="Siguiente" class="modal-nav modal-next">›</button>
     </div>
-    <p id="sector-modal-contador" class="text-center text-beige-100/60 text-xs mt-3"></p>
+    <p id="sector-modal-contador" class="modal-contador"></p>
   </div>
 </div>
 
+<style>
+  section { padding: 96px 0; }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 0 24px; }
+  .eyebrow {
+    font-size: .72rem; letter-spacing: .22em; text-transform: uppercase;
+    color: var(--madera-600); font-weight: 700; margin: 0 0 12px;
+  }
+  .headline {
+    font-family: var(--font-display); font-weight: 600;
+    font-size: clamp(1.9rem, 3.6vw, 2.8rem);
+    line-height: 1.1; margin: 0 0 14px; letter-spacing: -0.01em;
+  }
+  .headline em { font-style: italic; color: var(--madera-600); font-weight: 500; }
+  .lead { color: rgba(15,31,25,.62); font-size: 1.02rem; line-height: 1.6; max-width: 46ch; margin: 0 0 48px; }
+
+  .bento {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    grid-auto-rows: 150px; gap: 14px;
+  }
+  .tile { grid-column: span 1; grid-row: span 1; }
+  .tile.big { grid-column: span 2; grid-row: span 2; }
+  @media(max-width: 760px) {
+    .bento { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 130px; }
+    .tile.big { grid-column: span 2; grid-row: span 2; }
+  }
+
+  .tile {
+    position: relative; border-radius: 16px; overflow: hidden;
+    display: block; cursor: pointer; border: none; padding: 0;
+  }
+  .tile img { width: 100%; height: 100%; object-fit: cover; transition: transform .6s cubic-bezier(.2,.7,.2,1); }
+  .tile:hover img { transform: scale(1.08); }
+  .tile-scrim { position: absolute; inset: 0; background: linear-gradient(to top, rgba(15,31,25,.85) 0%, rgba(15,31,25,.05) 55%); }
+  .tile-label { position: absolute; left: 12px; bottom: 10px; right: 12px; color: var(--beige-50); text-align: left; }
+  .tile-label .name { font-family: var(--font-display); font-weight: 600; font-size: .95rem; display: flex; gap: 6px; align-items: center; }
+  .tile.big .tile-label .name { font-size: 1.25rem; }
+  .tile-label .sub { font-size: .72rem; color: rgba(248,242,230,.7); margin-top: 2px; }
+
+  /* modal */
+  .sector-modal {
+    position: fixed; inset: 0; z-index: 60;
+    background: rgba(15,31,25,.92);
+    display: flex; align-items: center; justify-content: center; padding: 1rem;
+  }
+  .sector-modal.hidden { display: none; }
+  .modal-cerrar {
+    position: absolute; top: 24px; right: 24px;
+    background: none; border: none; color: var(--beige-50);
+    font-size: 2rem; cursor: pointer; line-height: 1;
+  }
+  .modal-inner { width: 100%; max-width: 680px; }
+  .modal-header { text-align: center; margin-bottom: 16px; }
+  .modal-titulo { font-family: var(--font-display); font-size: 1.5rem; font-weight: 600; color: var(--beige-50); margin: 0 0 6px; }
+  .modal-frase { color: rgba(248,242,230,.7); font-size: .88rem; margin: 0; }
+  .modal-img-wrap { position: relative; aspect-ratio: 16/9; border-radius: 16px; overflow: hidden; background: var(--verde-900); }
+  .modal-img-wrap img { width: 100%; height: 100%; object-fit: cover; }
+  .modal-nav {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    width: 36px; height: 36px; border-radius: 50%;
+    background: rgba(15,31,25,.6); border: none; color: var(--beige-50);
+    font-size: 1.3rem; cursor: pointer; display: flex; align-items: center; justify-content: center;
+  }
+  .modal-prev { left: 8px; }
+  .modal-next { right: 8px; }
+  .modal-contador { text-align: center; color: rgba(248,242,230,.5); font-size: .75rem; margin-top: 10px; }
+
+  .reveal { opacity: 0; transform: translateY(18px); transition: opacity .7s ease, transform .7s ease; }
+  .reveal.in { opacity: 1; transform: translateY(0); }
+</style>
+
 <script define:vars={{ sectores: SECTORES }}>
-  const tiles = document.querySelectorAll('.sector-tile');
+  const tiles = document.querySelectorAll('.tile');
   const modal = document.getElementById('sector-modal');
   const modalImg = document.getElementById('sector-modal-img');
   const modalTitulo = document.getElementById('sector-modal-titulo');
@@ -69,29 +135,20 @@ import { SECTORES } from '../data/negocio';
   }
 
   function abrir(sectorId) {
-    sectorActual = sectores.find((s) => s.id === sectorId);
+    sectorActual = sectores.find(s => s.id === sectorId);
     if (!sectorActual) return;
     indiceActual = 0;
-    modalTitulo.innerHTML = `<span>${sectorActual.icon}</span> ${sectorActual.nombre}`;
+    modalTitulo.textContent = `${sectorActual.icon} ${sectorActual.nombre}`;
     modalFrase.textContent = sectorActual.frase;
     render();
     modal.classList.remove('hidden');
-    modal.classList.add('flex');
   }
 
-  function cerrar() {
-    modal.classList.add('hidden');
-    modal.classList.remove('flex');
-  }
+  function cerrar() { modal.classList.add('hidden'); }
 
-  tiles.forEach((tile) => {
-    tile.addEventListener('click', () => abrir(tile.getAttribute('data-sector-id')));
-  });
-
+  tiles.forEach(tile => tile.addEventListener('click', () => abrir(tile.dataset.sectorId)));
   btnCerrar.addEventListener('click', cerrar);
-  modal.addEventListener('click', (e) => {
-    if (e.target === modal) cerrar();
-  });
+  modal.addEventListener('click', e => { if (e.target === modal) cerrar(); });
   btnPrev.addEventListener('click', () => {
     if (!sectorActual) return;
     indiceActual = (indiceActual - 1 + sectorActual.imgs.length) % sectorActual.imgs.length;
@@ -102,10 +159,15 @@ import { SECTORES } from '../data/negocio';
     indiceActual = (indiceActual + 1) % sectorActual.imgs.length;
     render();
   });
-  document.addEventListener('keydown', (e) => {
+  document.addEventListener('keydown', e => {
     if (modal.classList.contains('hidden')) return;
     if (e.key === 'Escape') cerrar();
     if (e.key === 'ArrowLeft') btnPrev.click();
     if (e.key === 'ArrowRight') btnNext.click();
   });
+
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
 </script>

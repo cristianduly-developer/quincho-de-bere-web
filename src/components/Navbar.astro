@@ -1,71 +1,125 @@
 ---
-import { NAV_LINKS } from '../data/navlinks';
-import { waLink } from '../data/negocio';
+import { waLink, NEGOCIO } from '../data/negocio';
 ---
-<header id="navbar" class="hidden md:block fixed top-0 inset-x-0 z-30 -translate-y-full transition-transform duration-300">
-  <nav class="bg-verde-900/95 backdrop-blur-sm">
-    <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-      <a href="#" class="flex items-center gap-2.5 shrink-0">
-        <img src="/img/logo.jpeg" alt="El Quincho de Bere" class="w-8 h-8 rounded-full object-contain bg-beige-50" />
-        <span class="font-display font-semibold text-beige-50 text-sm">El Quincho de Bere</span>
-      </a>
-      <div class="flex items-center gap-7">
-        {NAV_LINKS.map((link) => (
-          <a
-            href={link.href}
-            data-nav-link={link.id}
-            class="nav-desktop-link text-sm text-beige-100/75 hover:text-oro-400 transition-colors flex items-center gap-1.5"
-          >
-            <span aria-hidden="true">{link.icon}</span>{link.label}
-          </a>
-        ))}
-      </div>
-      <a
-        href={waLink('Hola! Quiero consultar disponibilidad en El Quincho de Bere.')}
-        target="_blank"
-        rel="noopener noreferrer"
-        class="shrink-0 inline-flex items-center gap-1.5 bg-oro-400 hover:bg-[#e2c489] text-verde-950 text-sm font-bold px-4 py-2 rounded-full transition-colors"
-      >
-        Consultar
+<div class="notice-bar">
+  Estamos en reformas y <strong>reabrimos el 15 de septiembre</strong> — ya podés consultar tu fecha
+</div>
+
+<nav id="nav">
+  <div class="nav-inner">
+    <a href="#" class="brand">
+      <img src="/img/logo.jpeg" alt={NEGOCIO.nombre} />
+      <span class="brand-text">{NEGOCIO.nombre}</span>
+    </a>
+    <div class="nav-links">
+      <a href="#sectores">Sectores</a>
+      <a href="#turnos">Turnos</a>
+      <a href="#extras">Extras</a>
+      <a href="#opiniones">Opiniones</a>
+      <a href="#faq">Preguntas</a>
+    </div>
+    <div class="nav-cta">
+      <a class="btn btn-primary" href={waLink('Hola! Quiero consultar disponibilidad en El Quincho de Bere.')} target="_blank" rel="noopener noreferrer">
+        Consultar por WhatsApp
       </a>
     </div>
-  </nav>
-  <div class="wood-divider"></div>
-</header>
+  </div>
+</nav>
 
-<script>
-  const navbar = document.getElementById('navbar');
-  const desktopLinks = document.querySelectorAll('.nav-desktop-link');
-  const tabLinks = document.querySelectorAll('.nav-tab-link');
-  const sectionIds = ['por-que-elegirnos', 'galeria', 'extras', 'ubicacion'];
-  const sections = sectionIds
-    .map((id) => document.getElementById(id))
-    .filter((el): el is HTMLElement => el !== null);
+<style>
+  .notice-bar {
+    background: var(--verde-950);
+    color: var(--beige-100);
+    font-size: .82rem;
+    text-align: center;
+    padding: 9px 16px;
+    letter-spacing: .01em;
+  }
+  .notice-bar strong { color: var(--oro-400); }
 
-  window.addEventListener('scroll', () => {
-    if (window.scrollY > window.innerHeight * 0.8) {
-      navbar?.classList.remove('-translate-y-full');
-    } else {
-      navbar?.classList.add('-translate-y-full');
-    }
-  }, { passive: true });
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 24px;
+    transition: background .3s ease, box-shadow .3s ease, padding .3s ease;
+  }
+  nav.scrolled {
+    background: rgba(255,252,246,.92);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 1px 0 rgba(15,31,25,.08);
+    padding: 10px 24px;
+  }
+  .nav-inner {
+    max-width: 1180px;
+    margin: 0 auto;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.05rem;
+    text-decoration: none;
+  }
+  .brand img {
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    object-fit: cover;
+    background: #fff;
+    padding: 2px;
+  }
+  .brand-text { color: var(--verde-950); }
+  .nav-links {
+    display: flex;
+    gap: 28px;
+    font-size: .88rem;
+    font-weight: 600;
+  }
+  .nav-links a {
+    color: var(--verde-900);
+    text-decoration: none;
+    transition: color .2s;
+  }
+  .nav-links a:hover { color: var(--oro-500); }
+  .nav-cta { display: flex; align-items: center; gap: 14px; }
+  .nav-cta .btn { padding: .6rem 1.3rem; font-size: .82rem; }
 
-  function setActive(id: string) {
-    [...desktopLinks, ...tabLinks].forEach((link) => {
-      const isActive = link.getAttribute('data-nav-link') === id;
-      (link as HTMLElement).style.color = isActive ? '#D4AF6A' : '';
-    });
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    padding: .95rem 1.9rem;
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: .92rem;
+    transition: transform .18s ease, box-shadow .18s ease;
+    white-space: nowrap;
+    text-decoration: none;
+  }
+  .btn-primary {
+    background: var(--oro-400);
+    color: var(--verde-950);
+  }
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px -8px rgba(212,175,106,.55);
   }
 
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          setActive(entry.target.id);
-        }
-      });
-    },
-    { rootMargin: '-40% 0px -55% 0px' }
-  );
-  sections.forEach((section) => observer.observe(section));
+  @media (max-width: 860px) { .nav-links { display: none; } }
+</style>
+
+<script>
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav?.classList.toggle('scrolled', window.scrollY > 40);
+  }, { passive: true });
 </script>

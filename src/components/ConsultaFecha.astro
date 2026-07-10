@@ -1,228 +1,103 @@
 ---
-import { NEGOCIO, TURNOS, DISPONIBILIDAD } from '../data/negocio';
+import { TURNOS, waLink } from '../data/negocio';
+
+const iconos: Record<string, string> = { dia: '☀️', noche: '🌙', completo: '✨' };
+const descripciones: Record<string, string> = {
+  dia: 'Ideal para cumpleaños infantiles: sol, pileta y toda la tarde de juegos.',
+  noche: 'Fogón encendido, luces cálidas y la previa perfecta entre amigos.',
+  completo: 'Del mediodía hasta la noche cerrada — sin apurar ningún momento.',
+};
 ---
-<section class="max-w-md mx-auto px-6 -mt-16 relative z-20">
-  <div class="bg-beige-50 rounded-3xl shadow-xl border border-verde-800/10 p-6 md:p-8">
-    <p class="text-xs uppercase tracking-[0.2em] text-madera-600 font-semibold mb-1 text-center">Consultá tu fecha</p>
-    <h2 class="font-display text-xl md:text-2xl font-semibold text-verde-950 text-center mb-5">
-      Mirá la disponibilidad real
-    </h2>
+<section id="turnos" class="dayarc">
+  <div class="wrap">
+    <p class="eyebrow">Tu evento, a tu ritmo</p>
+    <h2 class="headline">Un día entero,<br/>de <em>principio a fin</em>.</h2>
+    <p class="lead">Del mediodía al fogón de la noche: elegí el turno que mejor se acomode a tu celebración.</p>
 
-    <div class="flex items-center justify-between mb-2">
-      <button id="cf-prev" type="button" aria-label="Mes anterior" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-verde-800/10 text-verde-900">‹</button>
-      <span id="cf-mes-label" class="font-display font-semibold text-verde-950 text-sm capitalize"></span>
-      <button id="cf-next" type="button" aria-label="Mes siguiente" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-verde-800/10 text-verde-900">›</button>
-    </div>
-
-    <div class="grid grid-cols-7 gap-1 text-center text-[10px] text-verde-900/50 font-semibold mb-1">
-      <span>L</span><span>M</span><span>X</span><span>J</span><span>V</span><span>S</span><span>D</span>
-    </div>
-    <div id="cf-grid" class="grid grid-cols-7 gap-1"></div>
-
-    <div class="flex flex-wrap gap-x-4 gap-y-1 mt-4 text-[11px] text-verde-900/60">
-      <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full" style="background:#639922"></span>Libre</span>
-      <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full" style="background:#EF9F27"></span>Un turno libre</span>
-      <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full" style="background:#D85A30"></span>Ocupado</span>
-      <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full" style="background:#E2DED2"></span>No disponible</span>
-    </div>
-
-    <div class="mt-5">
-      <label for="cf-turno" class="block text-xs font-semibold text-verde-900/70 mb-1.5">Turno</label>
-      <select
-        id="cf-turno"
-        class="w-full rounded-xl bg-white border border-verde-800/15 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-oro-400"
-      >
-        {TURNOS.map((t) => (
-          <option value={`${t.nombre} (${t.horario})`} data-tipo={t.tipo}>{t.nombre} — {t.horario}</option>
+    <div class="arc-track">
+      <div class="arc-line"></div>
+      <div class="arc-stops">
+        {TURNOS.map((turno) => (
+          <div class="stop">
+            <div class="stop-dot">{iconos[turno.tipo]}</div>
+            <div class="stop-card">
+              <h3>{turno.nombre}</h3>
+              <div class="hrs">{turno.horario}</div>
+              <p>{descripciones[turno.tipo]}</p>
+            </div>
+          </div>
         ))}
-      </select>
-      <p id="cf-turno-aviso" class="hidden text-xs text-madera-600 mt-1.5"></p>
+      </div>
     </div>
 
-    <p id="cf-aviso" class="hidden mt-4 text-sm bg-madera-500/10 text-madera-700 border border-madera-500/20 rounded-xl px-4 py-3"></p>
-
-    <a
-      id="cf-boton"
-      href="#"
-      target="_blank"
-      rel="noopener noreferrer"
-      class="btn-primary w-full justify-center mt-5 opacity-40 pointer-events-none"
-    >
-      Elegí una fecha libre
-    </a>
-    <p class="text-xs text-verde-900/50 text-center mt-3">
-      Esto no reserva nada — solo nos avisa qué fecha te interesa para coordinar por WhatsApp.
-    </p>
+    <div class="arc-cta">
+      <a href={waLink('Hola! Quiero consultar disponibilidad en El Quincho de Bere.')} target="_blank" rel="noopener noreferrer" class="btn btn-gold">
+        Consultar disponibilidad
+      </a>
+    </div>
   </div>
 </section>
 
-<script define:vars={{
-  whatsappNumero: NEGOCIO.whatsappNumero,
-  reaperturaFecha: NEGOCIO.reaperturaFecha,
-  supabaseUrl: DISPONIBILIDAD.supabaseUrl,
-  supabaseAnonKey: DISPONIBILIDAD.supabaseAnonKey,
-  orgId: DISPONIBILIDAD.orgId,
-}}>
-  const grid = document.getElementById('cf-grid');
-  const mesLabel = document.getElementById('cf-mes-label');
-  const prevBtn = document.getElementById('cf-prev');
-  const nextBtn = document.getElementById('cf-next');
-  const turnoSelect = document.getElementById('cf-turno');
-  const turnoAviso = document.getElementById('cf-turno-aviso');
-  const aviso = document.getElementById('cf-aviso');
-  const boton = document.getElementById('cf-boton');
-
-  const hoy = new Date();
-  hoy.setHours(0, 0, 0, 0);
-  let mesActual = new Date(hoy.getFullYear(), hoy.getMonth(), 1);
-  let fechaSeleccionada = null;
-  let ocupacion = new Map(); // fecha -> { dia: bool, noche: bool }
-  let cargando = true;
-
-  function ymd(d) {
-    return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+<style>
+  .dayarc {
+    position: relative;
+    background: var(--verde-950);
+    color: var(--beige-50);
+    overflow: hidden;
+    padding: 96px 0;
   }
-
-  async function cargarOcupadas() {
-    try {
-      const res = await fetch(`${supabaseUrl}/rest/v1/rpc/get_disponibilidad`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'apikey': supabaseAnonKey,
-          'Authorization': `Bearer ${supabaseAnonKey}`,
-        },
-        body: JSON.stringify({ p_org_id: orgId }),
-      });
-      if (res.ok) {
-        const data = await res.json();
-        ocupacion = new Map(data.map((r) => [r.fecha, { dia: !!r.dia_ocupado, noche: !!r.noche_ocupado }]));
-      }
-    } catch (e) {
-      // Si falla la consulta, seguimos mostrando el calendario sin marcar ocupados.
-    }
-    cargando = false;
-    render();
+  .dayarc::before {
+    content: "";
+    position: absolute; inset: 0;
+    background: linear-gradient(100deg, #efe4d0 0%, #d4af6a 30%, #8b5e3c 55%, #16302a 80%, #0f1f19 100%);
+    opacity: .09;
   }
-
-  function render() {
-    mesLabel.textContent = mesActual.toLocaleDateString('es-AR', { month: 'long', year: 'numeric' });
-
-    const primerDiaSemana = (mesActual.getDay() + 6) % 7; // lunes = 0
-    const diasEnMes = new Date(mesActual.getFullYear(), mesActual.getMonth() + 1, 0).getDate();
-
-    grid.innerHTML = '';
-    for (let i = 0; i < primerDiaSemana; i++) {
-      grid.appendChild(document.createElement('div'));
-    }
-
-    for (let dia = 1; dia <= diasEnMes; dia++) {
-      const fecha = new Date(mesActual.getFullYear(), mesActual.getMonth(), dia);
-      const fechaStr = ymd(fecha);
-      const esPasado = fecha < hoy;
-      const esReformas = fechaStr < reaperturaFecha;
-      const noDisponible = esPasado || esReformas || cargando;
-
-      const est = ocupacion.get(fechaStr) || { dia: false, noche: false };
-      const totalmenteOcupado = est.dia && est.noche;
-      const parcialmenteOcupado = est.dia !== est.noche;
-
-      const btn = document.createElement('button');
-      btn.type = 'button';
-      btn.textContent = String(dia);
-      btn.className = 'h-9 rounded-lg text-xs font-medium flex items-center justify-center transition-colors';
-
-      if (noDisponible) {
-        btn.style.background = '#E2DED2';
-        btn.style.color = '#8B897F';
-        btn.classList.add('cursor-not-allowed');
-        btn.disabled = true;
-      } else if (totalmenteOcupado) {
-        btn.style.background = '#D85A30';
-        btn.style.color = '#ffffff';
-        btn.classList.add('cursor-not-allowed');
-        btn.disabled = true;
-      } else if (parcialmenteOcupado) {
-        btn.style.background = '#EF9F27';
-        btn.style.color = '#3D2600';
-        btn.classList.add('hover:opacity-80', 'cursor-pointer');
-        if (fechaStr === fechaSeleccionada) {
-          btn.style.outline = '2px solid #16302A';
-          btn.style.outlineOffset = '1px';
-        }
-        btn.addEventListener('click', () => {
-          fechaSeleccionada = fechaStr;
-          render();
-          actualizarTurnos();
-        });
-      } else {
-        btn.style.background = fechaStr === fechaSeleccionada ? '#16302A' : '#639922';
-        btn.style.color = '#ffffff';
-        btn.classList.add('hover:opacity-80', 'cursor-pointer');
-        btn.addEventListener('click', () => {
-          fechaSeleccionada = fechaStr;
-          render();
-          actualizarTurnos();
-        });
-      }
-      grid.appendChild(btn);
-    }
-
-    prevBtn.disabled = mesActual.getFullYear() === hoy.getFullYear() && mesActual.getMonth() === hoy.getMonth();
-    prevBtn.classList.toggle('opacity-30', prevBtn.disabled);
+  .wrap { position: relative; z-index: 1; max-width: 1180px; margin: 0 auto; padding: 0 24px; }
+  .eyebrow {
+    font-size: .72rem; letter-spacing: .22em; text-transform: uppercase;
+    color: rgba(255,252,246,.75); font-weight: 700; margin: 0 0 12px;
   }
-
-  function actualizarTurnos() {
-    const est = fechaSeleccionada ? (ocupacion.get(fechaSeleccionada) || { dia: false, noche: false }) : { dia: false, noche: false };
-
-    [...turnoSelect.options].forEach((opt) => {
-      const tipo = opt.getAttribute('data-tipo');
-      const bloqueado = (tipo === 'dia' && est.dia) || (tipo === 'noche' && est.noche) || (tipo === 'completo' && (est.dia || est.noche));
-      opt.disabled = bloqueado;
-    });
-
-    if (turnoSelect.selectedOptions[0]?.disabled) {
-      const primeraLibre = [...turnoSelect.options].find((o) => !o.disabled);
-      if (primeraLibre) turnoSelect.value = primeraLibre.value;
-    }
-
-    if (fechaSeleccionada && (est.dia || est.noche)) {
-      turnoAviso.textContent = 'Para esta fecha ya hay un turno ocupado — dejamos seleccionado el que sigue libre.';
-      turnoAviso.classList.remove('hidden');
-    } else {
-      turnoAviso.classList.add('hidden');
-    }
-
-    actualizarBoton();
+  .headline {
+    font-family: var(--font-display); font-weight: 600; color: var(--beige-50);
+    font-size: clamp(1.9rem, 3.6vw, 2.8rem);
+    line-height: 1.1; margin: 0 0 14px; letter-spacing: -0.01em;
   }
+  .headline em { font-style: italic; color: var(--beige-50); font-weight: 500; text-decoration: underline; text-decoration-color: rgba(255,252,246,.3); text-underline-offset: 6px; }
+  .lead { color: rgba(255,252,246,.72); font-size: 1.02rem; line-height: 1.6; max-width: 46ch; }
 
-  function actualizarBoton() {
-    if (!fechaSeleccionada) {
-      boton.classList.add('opacity-40', 'pointer-events-none');
-      boton.textContent = 'Elegí una fecha libre';
-      aviso.classList.add('hidden');
-      return;
-    }
-    boton.classList.remove('opacity-40', 'pointer-events-none');
-    boton.textContent = 'Consultar por WhatsApp';
-    aviso.classList.add('hidden');
-
-    const turno = turnoSelect.value;
-    const fechaFormateada = new Date(fechaSeleccionada + 'T00:00:00').toLocaleDateString('es-AR', { day: 'numeric', month: 'long', year: 'numeric' });
-    const mensaje = `Hola! Quiero consultar disponibilidad en El Quincho de Bere para el ${fechaFormateada}, ${turno}.`;
-    boton.href = `https://wa.me/${whatsappNumero}?text=${encodeURIComponent(mensaje)}`;
+  .arc-track { position: relative; margin-top: 70px; padding-top: 10px; }
+  .arc-line {
+    position: absolute; top: 26px; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, rgba(255,252,246,.5), rgba(255,252,246,.1));
   }
+  .arc-stops { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; position: relative; }
+  @media(max-width: 820px) {
+    .arc-stops { grid-template-columns: 1fr; gap: 40px; }
+    .arc-line { display: none; }
+  }
+  .stop { position: relative; padding-top: 52px; }
+  .stop-dot {
+    position: absolute; top: 12px; left: 0;
+    width: 28px; height: 28px; border-radius: 50%;
+    background: var(--verde-950); border: 2px solid var(--oro-400);
+    display: flex; align-items: center; justify-content: center; font-size: .85rem;
+  }
+  .stop-card {
+    background: rgba(255,252,246,.08); border: 1px solid rgba(255,252,246,.18);
+    border-radius: 18px; padding: 22px 22px 24px; backdrop-filter: blur(6px);
+  }
+  .stop-card h3 { font-family: var(--font-display); font-weight: 600; font-size: 1.15rem; margin: 0 0 4px; color: var(--beige-50); }
+  .stop-card .hrs { color: var(--oro-400); font-weight: 700; font-size: .85rem; margin-bottom: 10px; }
+  .stop-card p { margin: 0; font-size: .85rem; color: rgba(255,252,246,.72); line-height: 1.55; }
 
-  prevBtn.addEventListener('click', () => {
-    mesActual = new Date(mesActual.getFullYear(), mesActual.getMonth() - 1, 1);
-    render();
-  });
-  nextBtn.addEventListener('click', () => {
-    mesActual = new Date(mesActual.getFullYear(), mesActual.getMonth() + 1, 1);
-    render();
-  });
-  turnoSelect.addEventListener('change', actualizarBoton);
-
-  render();
-  cargarOcupadas();
-</script>
+  .arc-cta { margin-top: 48px; text-align: center; }
+  .btn {
+    display: inline-flex; align-items: center; gap: .5rem;
+    padding: .95rem 2rem; border-radius: 999px;
+    font-weight: 700; font-size: .92rem;
+    transition: transform .18s ease, box-shadow .18s ease;
+    white-space: nowrap; text-decoration: none;
+  }
+  .btn-gold { background: var(--oro-400); color: var(--verde-950); }
+  .btn-gold:hover { transform: translateY(-2px); box-shadow: 0 10px 24px -8px rgba(212,175,106,.55); }
+</style>

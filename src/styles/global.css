@@ -1,5 +1,22 @@
 @import "tailwindcss";
 
+:root {
+  --verde-950: #0f1f19;
+  --verde-900: #16302a;
+  --verde-800: #1f4438;
+  --verde-700: #2b5a48;
+  --verde-600: #3a725d;
+  --beige-50:  #fffcf6;
+  --beige-100: #f8f2e6;
+  --beige-200: #efe4d0;
+  --madera-600: #8b5e3c;
+  --madera-700: #6e4a2f;
+  --oro-400: #d4af6a;
+  --oro-500: #c19a53;
+  --font-display: 'Fraunces', ui-serif, Georgia, serif;
+  --font-body: 'Manrope', ui-sans-serif, system-ui, sans-serif;
+}
+
 @theme {
   --color-verde-950: #0f1f19;
   --color-verde-900: #16302a;

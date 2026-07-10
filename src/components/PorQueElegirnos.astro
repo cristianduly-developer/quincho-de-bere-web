@@ -1,24 +1,78 @@
 ---
-import { INCLUYE, NEGOCIO } from '../data/negocio';
+import { NEGOCIO } from '../data/negocio';
 ---
-<section id="por-que-elegirnos" class="max-w-6xl mx-auto px-6 py-20 md:py-28 scroll-mt-16">
-  <div class="text-center max-w-2xl mx-auto mb-14">
-    <p class="text-xs uppercase tracking-[0.2em] text-madera-600 font-semibold mb-3">¿Por qué elegirnos?</p>
-    <h2 class="font-display text-3xl md:text-4xl font-semibold text-verde-950">
-      Todo lo que necesitás, en un mismo lugar
-    </h2>
-    <p class="mt-4 text-verde-900/70">
-      Capacidad para hasta {NEGOCIO.capacidad} personas, en {NEGOCIO.direccion}.
-    </p>
-  </div>
+<section id="por-que-elegirnos" class="reveal">
+  <div class="wrap">
+    <p class="eyebrow">¿Por qué elegirnos?</p>
+    <h2 class="headline">Todo lo que necesitás,<br/>en un mismo <em>lugar</em>.</h2>
+    <p class="lead">Capacidad para hasta {NEGOCIO.capacidad} personas. Un espacio pensado para que no tengas que resolver nada — nosotros ya lo resolvimos.</p>
 
-  <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-    {INCLUYE.map((item) => (
-      <div class="bg-white rounded-2xl border border-verde-800/8 p-5 hover:shadow-lg hover:-translate-y-0.5 transition-all">
-        <div class="text-3xl mb-3">{item.icon}</div>
-        <h3 class="font-display font-semibold text-verde-950 text-sm md:text-base leading-snug">{item.titulo}</h3>
-        <p class="text-xs md:text-sm text-verde-900/60 mt-1">{item.desc}</p>
+    <div class="feature-grid">
+      <div class="feature-photo">
+        <img src="/img/galeria/quincho-interior.jpg" alt="Quincho interno equipado" />
+        <span class="tag">🏠 Quincho interno</span>
       </div>
-    ))}
+      <ul class="amenity-list">
+        <li><span class="amenity-icon">🏊</span><div><h4>Pileta 8×3 m</h4><p>Con solarium, deck y ducha exterior.</p></div></li>
+        <li><span class="amenity-icon">🍽️</span><div><h4>Vajilla completa</h4><p>Pava eléctrica y cafetera de filtro, listas para usar.</p></div></li>
+        <li><span class="amenity-icon">🔥</span><div><h4>Fogón recreativo</h4><p>Asador, asientos y mesada para la sobremesa.</p></div></li>
+        <li><span class="amenity-icon">🌳</span><div><h4>Pérgola y parque</h4><p>Hamacas paraguayas, ping pong, metegol y espacio verde.</p></div></li>
+        <li><span class="amenity-icon">♿</span><div><h4>Baño adaptado</h4><p>Con ducha, agua caliente y cambiador de pañales.</p></div></li>
+      </ul>
+    </div>
   </div>
 </section>
+
+<style>
+  section { padding: 96px 0; }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 0 24px; }
+  .eyebrow {
+    font-size: .72rem; letter-spacing: .22em; text-transform: uppercase;
+    color: var(--madera-600); font-weight: 700; margin: 0 0 12px;
+  }
+  .headline {
+    font-family: var(--font-display); font-weight: 600;
+    font-size: clamp(1.9rem, 3.6vw, 2.8rem);
+    line-height: 1.1; margin: 0 0 14px; letter-spacing: -0.01em;
+  }
+  .headline em { font-style: italic; color: var(--madera-600); font-weight: 500; }
+  .lead { color: rgba(15,31,25,.62); font-size: 1.02rem; line-height: 1.6; max-width: 46ch; margin: 0 0 0; }
+
+  .feature-grid {
+    display: grid; grid-template-columns: 1.05fr 1fr;
+    gap: 56px; align-items: center; margin-top: 52px;
+  }
+  @media(max-width: 900px) { .feature-grid { grid-template-columns: 1fr; } }
+
+  .feature-photo {
+    position: relative; border-radius: 22px;
+    overflow: hidden; aspect-ratio: 4/5;
+  }
+  .feature-photo img { width: 100%; height: 100%; object-fit: cover; }
+  .feature-photo .tag {
+    position: absolute; left: 18px; bottom: 18px;
+    background: rgba(15,31,25,.75); color: var(--beige-50);
+    font-size: .75rem; padding: 8px 14px; border-radius: 999px;
+    backdrop-filter: blur(4px);
+  }
+
+  .amenity-list { list-style: none; margin: 0; padding: 0; }
+  .amenity-list li {
+    display: flex; gap: 16px; align-items: flex-start;
+    padding: 18px 0; border-bottom: 1px solid rgba(15,31,25,.09);
+  }
+  .amenity-list li:first-child { padding-top: 0; }
+  .amenity-icon { font-size: 1.4rem; line-height: 1; width: 34px; flex: none; text-align: center; }
+  .amenity-list h4 { margin: 0 0 3px; font-family: var(--font-display); font-weight: 600; font-size: 1.02rem; }
+  .amenity-list p { margin: 0; color: rgba(15,31,25,.58); font-size: .88rem; }
+
+  .reveal { opacity: 0; transform: translateY(18px); transition: opacity .7s ease, transform .7s ease; }
+  .reveal.in { opacity: 1; transform: translateY(0); }
+</style>
+
+<script>
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+</script>

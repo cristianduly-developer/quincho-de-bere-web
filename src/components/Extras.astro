@@ -1,34 +1,72 @@
 ---
 import { EXTRAS, waLink } from '../data/negocio';
 ---
-<section id="extras" class="bg-verde-900 py-20 md:py-28 scroll-mt-16">
-  <div class="max-w-6xl mx-auto px-6">
-    <div class="text-center max-w-2xl mx-auto mb-12">
-      <p class="text-xs uppercase tracking-[0.2em] text-oro-400 font-semibold mb-3">Extras opcionales</p>
-      <h2 class="font-display text-3xl md:text-4xl font-semibold text-beige-50">Sumá magia a tu evento</h2>
-      <p class="mt-4 text-beige-100/70">Servicios adicionales para llevar tu celebración al siguiente nivel.</p>
-    </div>
+<section id="extras" class="reveal">
+  <div class="wrap">
+    <p class="eyebrow">Sumale onda</p>
+    <h2 class="headline">Extras para llevar<br/>tu evento más <em>allá</em>.</h2>
+    <p class="lead">Se contratan aparte y se arman antes de que llegues.</p>
 
-    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+    <div class="carta">
       {EXTRAS.map((extra) => (
-        <div class="bg-verde-800/40 border border-beige-50/10 rounded-2xl overflow-hidden flex flex-col">
-          {extra.img && (
-            <img src={extra.img} alt={extra.titulo} class="w-full h-40 object-cover" />
-          )}
-          <div class="p-6 flex flex-col flex-1">
-            <div class="text-3xl mb-3">{extra.icon}</div>
-            <h3 class="font-display font-semibold text-beige-50 text-lg mb-1.5">{extra.titulo}</h3>
-            <p class="text-sm text-beige-100/65 flex-1">{extra.desc}</p>
-            <p class="mt-4 text-oro-400 font-semibold">{extra.precio}</p>
+        <div class="carta-item">
+          {extra.img && <img src={extra.img} alt={extra.titulo} />}
+          <div>
+            <h4>{extra.icon} {extra.titulo}</h4>
+            <p>{extra.desc}</p>
           </div>
+          <span class="carta-price">{extra.precio}</span>
         </div>
       ))}
     </div>
 
-    <div class="text-center mt-10">
-      <a href={waLink('Hola! Quiero consultar por los extras opcionales para mi evento en El Quincho de Bere.')} target="_blank" rel="noopener noreferrer" class="btn-primary">
+    <div style="text-align:center;margin-top:40px;">
+      <a href={waLink('Hola! Quiero consultar por los extras para mi evento en El Quincho de Bere.')} target="_blank" rel="noopener noreferrer" class="btn btn-outline">
         Consultar extras por WhatsApp
       </a>
     </div>
   </div>
 </section>
+
+<style>
+  section { padding: 96px 0; }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 0 24px; }
+  .eyebrow { font-size: .72rem; letter-spacing: .22em; text-transform: uppercase; color: var(--madera-600); font-weight: 700; margin: 0 0 12px; }
+  .headline { font-family: var(--font-display); font-weight: 600; font-size: clamp(1.9rem, 3.6vw, 2.8rem); line-height: 1.1; margin: 0 0 14px; letter-spacing: -0.01em; }
+  .headline em { font-style: italic; color: var(--madera-600); font-weight: 500; }
+  .lead { color: rgba(15,31,25,.62); font-size: 1.02rem; line-height: 1.6; max-width: 46ch; margin: 0 0 0; }
+
+  .carta { margin-top: 44px; border-top: 1px solid rgba(15,31,25,.12); }
+  .carta-item {
+    display: grid; grid-template-columns: 96px 1fr auto;
+    gap: 20px; align-items: center;
+    padding: 20px 0; border-bottom: 1px solid rgba(15,31,25,.12);
+  }
+  .carta-item img { width: 96px; height: 96px; border-radius: 14px; object-fit: cover; }
+  .carta-item h4 { margin: 0 0 4px; font-family: var(--font-display); font-weight: 600; font-size: 1.08rem; }
+  .carta-item p { margin: 0; color: rgba(15,31,25,.6); font-size: .86rem; max-width: 52ch; line-height: 1.5; }
+  .carta-price {
+    font-size: .74rem; letter-spacing: .06em; text-transform: uppercase;
+    font-weight: 700; color: var(--madera-600);
+    border: 1px solid var(--madera-600); border-radius: 999px;
+    padding: 7px 14px; white-space: nowrap;
+  }
+  @media(max-width: 640px) {
+    .carta-item { grid-template-columns: 64px 1fr; }
+    .carta-item img { width: 64px; height: 64px; }
+    .carta-price { grid-column: 2; justify-self: start; }
+  }
+
+  .btn {
+    display: inline-flex; align-items: center; gap: .5rem;
+    padding: .9rem 1.9rem; border-radius: 999px;
+    font-weight: 700; font-size: .92rem;
+    transition: transform .18s ease, background .18s ease;
+    white-space: nowrap; text-decoration: none;
+  }
+  .btn-outline { border: 1.5px solid var(--verde-950); color: var(--verde-950); background: transparent; }
+  .btn-outline:hover { background: var(--verde-950); color: var(--beige-50); }
+
+  .reveal { opacity: 0; transform: translateY(18px); transition: opacity .7s ease, transform .7s ease; }
+  .reveal.in { opacity: 1; transform: translateY(0); }
+</style>
